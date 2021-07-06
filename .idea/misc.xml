@@ -9,6 +9,7 @@
         <option value="$PROJECT_DIR$/Message/pom.xml" />
         <option value="$PROJECT_DIR$/FileSystem/pom.xml" />
         <option value="$PROJECT_DIR$/FileServer/pom.xml" />
+        <option value="$PROJECT_DIR$/FileClient/pom.xml" />
       </list>
     </option>
   </component>

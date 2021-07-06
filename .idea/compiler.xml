@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="Type" />
         <module name="Message" />
+        <module name="FileClient" />
         <module name="FileCloud" />
         <module name="FileServer" />
         <module name="FileSystem" />
