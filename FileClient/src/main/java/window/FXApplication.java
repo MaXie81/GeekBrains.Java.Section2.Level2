@@ -6,7 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class AppStart extends Application {
+public class FXApplication extends javafx.application.Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -20,7 +20,7 @@ public class AppStart extends Application {
         primaryStage.show();
     }
 
-    public static void main(String[] args) {
+    public static void start(String[] args) {
         launch(args);
     }
 }
