@@ -106,9 +106,9 @@ public class ClientHandler {
             return receiveFile(mess);
     }
     private Mess receiveFile(Mess mess) {
-        messResp = setServerFile(mess);
-        if (messResp.getCode() != ResultCodes.OK)
-            return MessUtil.getResp(mess, code);
+        messResp = setServerFileForReceive(mess);
+        if (!MessUtil.isRespOK(mess, messResp))
+            return messResp;
         else
             sendIO(messResp);
 
@@ -125,9 +125,9 @@ public class ClientHandler {
         return messResp;
     }
     private Mess sendFile(Mess mess) {
-        messResp = setServerFile_(mess);
-        if (messResp.getCode() != ResultCodes.OK)
-            return MessUtil.getResp(mess, code);
+        messResp = setServerFileForSend(mess);
+        if (!MessUtil.isRespOK(mess, messResp))
+            return messResp;
         else
             sendIO(messResp);
 
@@ -179,7 +179,7 @@ public class ClientHandler {
             }
         }
     }
-    private Mess setServerFile(Mess mess) {
+    private Mess setServerFileForReceive(Mess mess) {
         try {
             messResp = dir.work(mess);
 
@@ -194,7 +194,7 @@ public class ClientHandler {
         }
         return MessUtil.getErr(ResultCodes.ERR);
     }
-    private Mess setServerFile_(Mess mess) {
+    private Mess setServerFileForSend(Mess mess) {
         try {
             messResp = dir.work(new Mess(MessageTypes.DIR_INFO));
 
@@ -209,10 +209,8 @@ public class ClientHandler {
 
             return MessUtil.getRespOk(mess);
         } catch (IOException e) {
-            e.printStackTrace();
+            return MessUtil.getRespErr(ResultCodes.ERR);
         }
-
-        return MessUtil.getErr(ResultCodes.ERR);
     }
     private Mess receiveFilePortion() {
         try {
@@ -315,8 +313,6 @@ public class ClientHandler {
     }
     private void closeConn() {
         try {
-//            bos.close();
-//            bis.close();
             dos.close();
             dis.close();
             socket.close();

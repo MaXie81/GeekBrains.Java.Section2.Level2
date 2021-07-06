@@ -1,5 +1,6 @@
 package window;
 
+import dictionary.ResultCodes;
 import javafx.fxml.FXML;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -147,6 +148,14 @@ public class Controller {
         mess = new Mess(MessageTypes.DIR_COPY);
         mess.setFlgServer(flgServer);
         messResp = client.work(mess);
+
+        if (messResp.getCode() != ResultCodes.OK) {
+            JOptionPane.showMessageDialog(null,
+                    new String[] {"Не выбран файл!"},
+                    "Ошибка копирования",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
 
         refreshForm();
     }
