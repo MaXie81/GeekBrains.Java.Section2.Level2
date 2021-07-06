@@ -10,8 +10,8 @@
         <module name="Message" />
         <module name="FileClient" />
         <module name="FileCloud" />
-        <module name="FileSystem" />
         <module name="FileServer" />
+        <module name="FileSystem" />
       </profile>
     </annotationProcessing>
   </component>

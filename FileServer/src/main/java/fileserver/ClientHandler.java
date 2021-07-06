@@ -135,8 +135,7 @@ public class ClientHandler {
             readFilePortion();
             if (arrByte.length > 0 ) {
                 messResp = sendFilePortion();
-                if (messResp.getCode() != ResultCodes.OK)
-                    return MessUtil.getResp(mess, code);
+                if (messResp.getCode() != ResultCodes.OK) return MessUtil.getResp(mess, code);
             } else
                 break;
         }
@@ -183,7 +182,7 @@ public class ClientHandler {
         try {
             messResp = dir.work(mess);
 
-            if (messResp.getCode() != ResultCodes.OK) return MessUtil.getResp(mess, ResultCodes.NO_FILE_SELECTED);
+            if (!MessUtil.isRespOK(mess, messResp)) return MessUtil.getResp(mess, ResultCodes.NO_FILE_SELECTED);
 
             fil = new File(messResp.getDirPath() + "\\" + messResp.getSelectName());
             bosf = new BufferedOutputStream(new FileOutputStream(fil), BUF_SIZE);
