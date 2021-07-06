@@ -4,7 +4,7 @@ import filesystem.*;
 import message.*;
 import dictionary.MessageTypes;
 import dictionary.ResultCodes;
-import dictionary.CommandCodes;
+import dictionary.CommandTypes;
 import dictionary.SelectTypes;
 
 import java.io.*;
@@ -30,7 +30,6 @@ public class ClientHandler {
     private Mess mess;
     private Mess messResp;
     private ResultCodes code;
-    private CommandCodes command;
 
     public ClientHandler(Socket socket) {
         this.socket = socket;
@@ -44,7 +43,7 @@ public class ClientHandler {
         while (!socket.isClosed()) {
             try {
                 mess = Mess.fromJson(dis.readUTF());
-                System.out.println(PORT + " > " + mess.getType() + " " + (mess.getCommand() != null ? mess.getCommand() : ""));
+                System.out.println(PORT + " > " + mess.getType() + " " + (mess.getCommand() != CommandTypes.NOT_DEFINED ? mess.getCommand() : ""));
 
                 messResp = processMess(mess);
 
@@ -114,7 +113,7 @@ public class ClientHandler {
 
         while (true) {
             messResp = receiveFilePortion();
-            if (messResp.getCommand() == CommandCodes.RECEIVE) {
+            if (messResp.getCommand() == CommandTypes.RECEIVE) {
                 saveFilePortion();
                 sendIO(messResp);
             } else

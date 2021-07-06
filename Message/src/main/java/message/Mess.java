@@ -2,7 +2,7 @@ package message;
 
 import com.google.gson.Gson;
 import dictionary.ResultCodes;
-import dictionary.CommandCodes;
+import dictionary.CommandTypes;
 import dictionary.SelectTypes;
 import dictionary.MessageTypes;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.util.LinkedList;
 @Data
 public class Mess {
     private MessageTypes type;
-    private CommandCodes command = CommandCodes.NOT_DEFINED;
+    private CommandTypes command = CommandTypes.NOT_DEFINED;
     private boolean flgServer = false;
 
     private String dirName;
@@ -25,7 +25,6 @@ public class Mess {
     private String password;
 
     private int cntClick;
-//    private int errCode = 0;
     private ResultCodes code = ResultCodes.OK;
 
     private String valSting = "";

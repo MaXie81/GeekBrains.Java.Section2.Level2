@@ -7,6 +7,5 @@ public enum SelectTypes {
     DIR_CURR,
     DIR_ALL,
     INVALID_NAME,
-    NOT_EXIST,
-    ERR
+    NOT_EXIST
 }

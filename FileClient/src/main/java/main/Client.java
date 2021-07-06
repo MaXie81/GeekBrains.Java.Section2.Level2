@@ -1,11 +1,10 @@
 package main;
 
-import com.google.gson.internal.bind.util.ISO8601Utils;
 import filesystem.*;
 import message.*;
 import dictionary.MessageTypes;
 import dictionary.ResultCodes;
-import dictionary.CommandCodes;
+import dictionary.CommandTypes;
 import dictionary.SelectTypes;
 
 import java.io.*;
@@ -146,7 +145,7 @@ public class Client {
         while (true) {
             messResp = receiveFilePortion(mess);
             if (!MessUtil.isRespOK(mess, messResp)) return abortCopyFile(messResp);
-            if (messResp.getCommand() == CommandCodes.SEND) {
+            if (messResp.getCommand() == CommandTypes.SEND) {
                 saveFilePortion();
             } else
                 break;
@@ -220,13 +219,13 @@ public class Client {
         }
     }
     private Mess setServerFileForSend(Mess mess) {
-        mess.setCommand(CommandCodes.SET);
+        mess.setCommand(CommandTypes.SET);
         messResp = sendSrv(mess);
 
         return messResp;
     }
     private Mess setServerFileForReceive(Mess mess) {
-        mess.setCommand(CommandCodes.SET);
+        mess.setCommand(CommandTypes.SET);
         messResp = sendSrv(mess);
 
         if (MessUtil.isRespOK(mess, messResp)) {
@@ -250,7 +249,7 @@ public class Client {
     }
     private Mess sendFilePortion(Mess mess) {
         try {
-            mess.setCommand(CommandCodes.RECEIVE);
+            mess.setCommand(CommandTypes.RECEIVE);
             mess.setValInt(arrByte.length);
             sendIO(mess);
 
@@ -266,7 +265,7 @@ public class Client {
     }
     private Mess receiveFilePortion(Mess mess) {
         try {
-            mess.setCommand(CommandCodes.SEND);
+            mess.setCommand(CommandTypes.SEND);
             messResp = sendSrv(mess);
 
             arrByte = new byte[messResp.getValInt()];
@@ -281,7 +280,7 @@ public class Client {
         return MessUtil.getErr(ResultCodes.ERR);
     }
     private Mess completeFileCopy(Mess mess) {
-        mess.setCommand(CommandCodes.COMPLITE);
+        mess.setCommand(CommandTypes.COMPLITE);
         mess.setValLong(fil.length());
         return sendSrv(mess);
     }
@@ -298,7 +297,7 @@ public class Client {
     }
     private void sendIO(Mess mess) {
         try {
-            System.out.println(PORT + " < " + mess.getType() + " " + (mess.getCommand() != null ? mess.getCommand() : ""));
+            System.out.println(PORT + " < " + mess.getType() + " " + (mess.getCommand() != CommandTypes.NOT_DEFINED ? mess.getCommand() : ""));
             dos.writeUTF(mess.toJson());
         } catch (IOException e) {
             e.printStackTrace();

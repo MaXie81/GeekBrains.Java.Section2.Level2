@@ -1,10 +1,9 @@
 package dictionary;
 
-public enum CommandCodes {
+public enum CommandTypes {
     SET,
     SEND,
     RECEIVE,
     COMPLITE,
-//    UNDEFINED
     NOT_DEFINED
 }
