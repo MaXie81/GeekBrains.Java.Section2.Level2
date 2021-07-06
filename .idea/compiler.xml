@@ -6,9 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="Type" />
         <module name="Message" />
         <module name="FileCloud" />
-        <module name="Type" />
+        <module name="FileServer" />
+        <module name="FileSystem" />
       </profile>
     </annotationProcessing>
   </component>
