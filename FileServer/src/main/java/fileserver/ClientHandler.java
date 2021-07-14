@@ -153,6 +153,8 @@ public class ClientHandler {
     private void readFilePortion() {
         try {
             int size = bisf.available() < BUF_SIZE ? bisf.available() : BUF_SIZE;
+//            System.out.println("!!!!bisf.available() " +  bisf.available());
+//            System.out.println("!!!!size " +  size);
             arrByte = new byte[size];
             bisf.read(arrByte);
         } catch (IOException e) {
@@ -211,7 +213,6 @@ public class ClientHandler {
 
             fil = new File(mess.getDirPath() + "\\" + mess.getSelectName());
             bisf = new BufferedInputStream(new FileInputStream(fil), BUF_SIZE);
-
             return MessUtil.getRespOk(mess);
         } catch (IOException e) {
             return MessUtil.getRespErr(ResultCodes.ERR);

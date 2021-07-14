@@ -7,51 +7,40 @@ import dictionary.MessageTypes;
 import dictionary.ResultCodes;
 import dictionary.CommandTypes;
 import dictionary.SelectTypes;
+import services.CommunicationService;
+import services.Factory;
 
 import java.io.*;
-import java.net.Socket;
 import java.util.Properties;
 
 public class Client {
-    private final String HOST;
-    private final int PORT;
-    private final String PATH_START;
     private final int BUF_SIZE;
 
     private Dir dir;
     private File fil;
     private byte[] arrByte;
 
-    private Socket socket;
-    private DataInputStream dis;
-    private DataOutputStream dos;
     private BufferedInputStream bisf;
     private BufferedOutputStream bosf;
 
-    private boolean flgConn = false;
     private boolean flgAuth = false;
 
     private Mess mess;
     private Mess messResp;
     private ResultCodes code;
 
+    private CommunicationService communicationService;
+
     public Client() {
         Properties properties = PropertiesFactory.getProperties(true);
 
-        HOST = properties.getProperty("HOST");
-        PORT = Integer.parseInt(properties.getProperty("PORT"));
-        PATH_START = properties.getProperty("PATH_START");
         BUF_SIZE = Integer.parseInt(properties.getProperty("BUF_SIZE").replaceAll("\\D", ""));
 
-        try {
-            openConn();
-            dir = new Dir(PATH_START, false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        dir = Factory.getDir().getDir();
+        communicationService = Factory.getCommunicationService(dir);
     }
     public Mess work(Mess mess) {
-        if (!flgConn) openConn();
+        if (!communicationService.isConnection()) communicationService.openConn();
         return processMess(mess);
     }
     private Mess processMess(Mess mess) {
@@ -69,14 +58,14 @@ public class Client {
             case CONN_CLOSE : return disconn(mess);
             case DIR_INFO   : return routeMess(mess);
             case DIR_SET    : return routeMess(mess);
-            case FILE_ADD: return routeMess(mess);
+            case FILE_ADD   : return routeMess(mess);
             case DIR_DEL    : return routeMess(mess);
             case DIR_COPY   : return сopyFile(mess);
             default : return MessUtil.getErr(ResultCodes.ERR_MESS);
         }
     }
     private Mess authOn(Mess mess) {
-        messResp = sendSrv(mess);
+        messResp = communicationService.sendSrv(mess);
 
         switch (messResp.getCode()) {
             case ERR_LOGIN :
@@ -93,7 +82,7 @@ public class Client {
         return messResp;
     }
     private Mess authOff(Mess mess) {
-        messResp = sendSrv(mess);
+        messResp = communicationService.sendSrv(mess);
 
         if (MessUtil.isRespOK(mess, messResp)) {
             flgAuth = false;
@@ -103,18 +92,18 @@ public class Client {
         return messResp;
     }
     private Mess disconn(Mess mess) {
-        messResp = sendSrv(mess);
+        messResp = communicationService.sendSrv(mess);
 
         if (MessUtil.isRespOK(mess, messResp)) {
             flgAuth = false;
-            closeConn();
+            communicationService.closeConn();
         } else {
             messResp = MessUtil.getErr(ResultCodes.ERR);
         }
         return messResp;
     }
     private Mess routeMess(Mess mess) {
-        return send(mess);
+        return communicationService.send(mess);
     }
     private Mess сopyFile(Mess mess) {
         if (mess.isFlgServer())
@@ -229,13 +218,13 @@ public class Client {
     }
     private Mess setServerFileForSend(Mess mess) {
         mess.setCommand(CommandTypes.SET);
-        messResp = sendSrv(mess);
+        messResp = communicationService.sendSrv(mess);
 
         return messResp;
     }
     private Mess setServerFileForReceive(Mess mess) {
         mess.setCommand(CommandTypes.SET);
-        messResp = sendSrv(mess);
+        messResp = communicationService.sendSrv(mess);
 
         if (MessUtil.isRespOK(mess, messResp)) {
             mess.setDirPath(messResp.getDirPath());
@@ -247,6 +236,7 @@ public class Client {
     private Mess setClientFileForReceive(Mess mess) {
         try {
             messResp = dir.work(mess);
+
             fil = new File(messResp.getDirPath() + "\\" + messResp.getSelectName());
             bosf = new BufferedOutputStream(new FileOutputStream(fil), BUF_SIZE);
 
@@ -257,93 +247,27 @@ public class Client {
         }
     }
     private Mess sendFilePortion(Mess mess) {
-        try {
-            mess.setCommand(CommandTypes.RECEIVE);
-            mess.setValInt(arrByte.length);
-            sendIO(mess);
+        mess.setCommand(CommandTypes.RECEIVE);
+        mess.setValInt(arrByte.length);
 
-            dos.write(arrByte);
-            dos.flush();
+        communicationService.sendIO(mess);
+        communicationService.sendFilePortion(arrByte);
 
-            System.out.println(PORT + " << " + "передано: " + arrByte.length);
-
-            return receiveIO();
-        } catch (IOException e) {
-            return MessUtil.getErr(ResultCodes.ERR);
-        }
+        return communicationService.receiveIO();
     }
     private Mess receiveFilePortion(Mess mess) {
-        try {
-            mess.setCommand(CommandTypes.SEND);
-            messResp = sendSrv(mess);
+        mess.setCommand(CommandTypes.SEND);
+        messResp = communicationService.sendSrv(mess);
 
-            arrByte = new byte[messResp.getValInt()];
-            dis.readFully(arrByte);
+        arrByte = new byte[messResp.getValInt()];
+        arrByte = communicationService.receiveFilePortion(arrByte.length);
 
-            System.out.println(PORT + " >> " + "получено: " + arrByte.length);
-
-            return messResp;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return MessUtil.getErr(ResultCodes.ERR);
+        return messResp;
     }
     private Mess completeFileCopy(Mess mess) {
         mess.setCommand(CommandTypes.COMPLITE);
         mess.setValLong(fil.length());
-        return sendSrv(mess);
-    }
-
-    private Mess send(Mess mess) {
-        if (mess.isFlgServer())
-            return sendSrv(mess);
-        else
-            return dir.work(mess);
-    }
-    private Mess sendSrv(Mess mess) {
-        sendIO(mess);
-        return receiveIO();
-    }
-    private void sendIO(Mess mess) {
-        try {
-            System.out.println(PORT + " < " + mess.getType() + " " + (mess.getCommand() != CommandTypes.NOT_DEFINED ? mess.getCommand() : ""));
-            dos.writeUTF(mess.toJson());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    private Mess receiveIO() {
-        try {
-            messResp = Mess.fromJson(dis.readUTF());
-            System.out.println(PORT + " > " + messResp.getType() + " " + messResp.getCode());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return messResp;
-    }
-    private void openConn() {
-        try {
-            socket = new Socket(HOST, PORT);
-            dis = new DataInputStream(socket.getInputStream());
-            dos = new DataOutputStream(socket.getOutputStream());
-            flgConn = true;
-
-            System.out.println("Соединение с Сервером установлено");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }    
-    }
-    private void closeConn() {
-        try {
-            flgConn = false;
-            dos.close();
-            dis.close();
-            socket.close();
-
-            System.out.println("Соединение с Сервером закрыто");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }    
+        return communicationService.sendSrv(mess);
     }
     public boolean isFlgAuth() {
         return flgAuth;
