@@ -1,5 +1,6 @@
 package fileserver;
 
+import factory.PropertiesFactory;
 import filesystem.*;
 import message.*;
 import dictionary.MessageTypes;
@@ -9,11 +10,12 @@ import dictionary.SelectTypes;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Properties;
 
 public class ClientHandler {
     private final int PORT;
-    private final String PATH_START = "C:\\temp\\";
-    private final int BUF_SIZE = 20_000_000;
+    private final String PATH_START;
+    private final int BUF_SIZE;
 
     private Dir dir;
     private File fil;
@@ -34,6 +36,11 @@ public class ClientHandler {
     public ClientHandler(Socket socket) {
         this.socket = socket;
         this.PORT = socket.getPort();
+
+        Properties properties = PropertiesFactory.getProperties(false);
+
+        PATH_START = properties.getProperty("PATH_START");
+        BUF_SIZE = Integer.parseInt(properties.getProperty("BUF_SIZE").replaceAll("\\D", ""));
 
         openConn();
 
@@ -71,7 +78,7 @@ public class ClientHandler {
             case CONN_CLOSE : return close();
             case DIR_SET    : return routeMess(mess);
             case DIR_INFO   : return routeMess(mess);
-            case DIR_ADD    : return routeMess(mess);
+            case FILE_ADD   : return routeMess(mess);
             case DIR_DEL    : return routeMess(mess);
             case DIR_COPY   : return filCopy(mess);
             default : return MessUtil.getErr(ResultCodes.ERR_MESS);

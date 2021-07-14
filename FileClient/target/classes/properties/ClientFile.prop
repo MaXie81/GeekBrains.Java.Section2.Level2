@@ -1,0 +1,4 @@
+HOST = localhost
+PORT = 6005
+PATH_START = C:\\temp
+BUF_SIZE = 20_000_000

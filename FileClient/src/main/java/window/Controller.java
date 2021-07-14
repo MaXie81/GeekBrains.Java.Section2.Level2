@@ -31,19 +31,16 @@ public class Controller {
     public PasswordField pswPassword;
     @FXML
     public Button btnConnect;
-
     @FXML
     public TextField txtClientPath;
     @FXML
     public TextField txtServerPath;
-
     @FXML
     public HBox panelDir;
     @FXML
     public ListView lstClientDir;
     @FXML
     public ListView lstServerDir;
-
     @FXML
     public HBox panelComand;
 
@@ -130,7 +127,7 @@ public class Controller {
         refreshForm();
     }
     private void createDir(String name) {
-        mess = new Mess(MessageTypes.DIR_ADD);
+        mess = new Mess(MessageTypes.FILE_ADD);
         mess.setSelectName(name);
         mess.setFlgServer(flgServer);
         messResp = client.work(mess);

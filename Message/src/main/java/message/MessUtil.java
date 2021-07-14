@@ -14,7 +14,7 @@ public class MessUtil {
         mapMessResp.put(MessageTypes.DIR_SET, MessageTypes.DIR_SET_RESP);
         mapMessResp.put(MessageTypes.DIR_INFO, MessageTypes.DIR_INFO_RESP);
         mapMessResp.put(MessageTypes.DIR_COPY, MessageTypes.DIR_COPY_RESP);
-        mapMessResp.put(MessageTypes.DIR_ADD, MessageTypes.DIR_ADD_RESP);
+        mapMessResp.put(MessageTypes.FILE_ADD, MessageTypes.FILE_ADD_RESP);
         mapMessResp.put(MessageTypes.DIR_DEL, MessageTypes.DIR_DEL_RESP);
 
     }

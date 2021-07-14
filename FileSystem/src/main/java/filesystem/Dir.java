@@ -38,7 +38,7 @@ public class Dir {
         switch (mess.getType()) {
             case DIR_INFO : return info();
             case DIR_SET  : return set(mess);
-            case DIR_ADD  : return createDir(mess);
+            case FILE_ADD: return createDir(mess);
             case DIR_DEL  : return delete(mess);
             case DIR_COPY : return addFil(mess);
 
@@ -77,7 +77,7 @@ public class Dir {
 
         code = setPosition(dirName, true);
 
-        messResp = new Mess(MessageTypes.DIR_ADD_RESP);
+        messResp = new Mess(MessageTypes.FILE_ADD_RESP);
         messResp.setCode(code);
 
         return messResp;
@@ -123,7 +123,7 @@ public class Dir {
     private SelectTypes getType(String name) {
         if (name == null) return SelectTypes.INVALID_NAME;
         if (name.equals("")) return SelectTypes.INVALID_NAME;
-        if (name.equals("*")) return SelectTypes.DIR_ALL;
+        if (name.equals("*")) return SelectTypes.ALL;
         if (name.equals(".")) return SelectTypes.DIR_CURR;
         if (name.equals("..")) return SelectTypes.DIR_PREV;
 
@@ -138,7 +138,7 @@ public class Dir {
     private ResultCodes setPosition(String name, boolean flgMove) {
         switch (getType(name)) {
             case INVALID_NAME : return ResultCodes.INVALID_NAME;
-            case DIR_ALL : return ResultCodes.INVALID_NAME;
+            case ALL: return ResultCodes.INVALID_NAME;
             case NOT_EXIST: return ResultCodes.FILE_NOT_EXIST;
             case DIR_PREV :
                 if (flgMove)
