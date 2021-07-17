@@ -1,4 +1,4 @@
-package main;
+package services;
 
 import dictionary.CommandTypes;
 import dictionary.MessageTypes;
@@ -6,13 +6,11 @@ import dictionary.ResultCodes;
 import dictionary.SelectTypes;
 import message.Mess;
 import message.MessUtil;
-import services.CommunicationService;
-import services.Factory;
 
 import java.io.*;
 import java.util.Properties;
 
-public class FileCopy {
+public class FileCopyService {
     private final int BUF_SIZE;
 
     private File fil;
@@ -27,7 +25,7 @@ public class FileCopy {
 
     private CommunicationService communicationService;
 
-    public FileCopy(CommunicationService communicationService) {
+    public FileCopyService(CommunicationService communicationService) {
         Properties properties = Factory.getProperties();
         BUF_SIZE = Integer.parseInt(properties.getProperty("BUF_SIZE").replaceAll("\\D", ""));
 

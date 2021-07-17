@@ -1,7 +1,7 @@
 package services;
 
 import dictionary.CommandTypes;
-import filesystem.Dir;
+import filesystem.Directory;
 import message.Mess;
 
 import java.io.DataInputStream;
@@ -18,20 +18,20 @@ public class CommunicationService {
     private DataInputStream dis;
     private DataOutputStream dos;
 
-    private Dir dir;
+    private Directory directory;
     private boolean isConnection = false;
 
     private Mess mess;
     private Mess messResp;
 
-    public CommunicationService(Dir dir) {
+    public CommunicationService(Directory directory) {
         Properties properties = Factory.getProperties();
         HOST = properties.getProperty("HOST");
         PORT = Integer.parseInt(properties.getProperty("PORT"));
 
-        this.dir = dir;
+        this.directory = directory;
     }
-    public void openConn() {
+    public void openConnection() {
         try {
             socket = new Socket(HOST, PORT);
             dis = new DataInputStream(socket.getInputStream());
@@ -43,7 +43,7 @@ public class CommunicationService {
             e.printStackTrace();
         }
     }
-    public void closeConn() {
+    public void closeConnection() {
         try {
             isConnection = false;
             dos.close();
@@ -83,7 +83,7 @@ public class CommunicationService {
         return receiveIO();
     }
     public Mess sendLocal(Mess mess) {
-        return dir.work(mess);
+        return directory.work(mess);
     }
     public void sendFilePortion(byte[] arrByte) {
         try {

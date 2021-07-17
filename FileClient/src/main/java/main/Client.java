@@ -5,21 +5,22 @@ import dictionary.MessageTypes;
 import dictionary.ResultCodes;
 import services.CommunicationService;
 import services.Factory;
+import services.FileCopyService;
 
 public class Client {
     private boolean isAuth = false;
+
+    private CommunicationService communicationService;
 
     private Mess mess;
     private Mess messResp;
     private ResultCodes code;
 
-    private CommunicationService communicationService;
-
     public Client() {
         communicationService = Factory.getCommunicationService();
     }
     public Mess work(Mess mess) {
-        if (!communicationService.isConnection()) communicationService.openConn();
+        if (!communicationService.isConnection()) communicationService.openConnection();
         return processMess(mess);
     }
     private Mess processMess(Mess mess) {
@@ -75,7 +76,7 @@ public class Client {
 
         if (MessUtil.isRespOK(mess, messResp)) {
             isAuth = false;
-            communicationService.closeConn();
+            communicationService.closeConnection();
         } else {
             messResp = MessUtil.getErr(ResultCodes.ERR);
         }
@@ -85,12 +86,12 @@ public class Client {
         return communicationService.send(mess);
     }
     private Mess сopyFile(Mess mess) {
-        FileCopy fileCopy = new FileCopy(communicationService);
+        FileCopyService fileCopyService = new FileCopyService(communicationService);
 
         if (mess.isFlgServer())
-            return fileCopy.receiveFile(mess);
+            return fileCopyService.receiveFile(mess);
         else
-            return fileCopy.sendFile(mess);
+            return fileCopyService.sendFile(mess);
     }
     public boolean isAuth() {
         return isAuth;

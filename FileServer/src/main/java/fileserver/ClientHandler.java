@@ -17,7 +17,7 @@ public class ClientHandler {
     private final String PATH_START;
     private final int BUF_SIZE;
 
-    private Dir dir;
+    private Directory directory;
     private File fil;
     private byte[] arrByte;
 
@@ -89,7 +89,7 @@ public class ClientHandler {
             code = Server.authLoginPassword(mess.getLogin(), mess.getPassword());
             flgAuth = (code == ResultCodes.OK);
 
-            if (flgAuth) dir = new Dir(PATH_START + mess.getLogin(), true);
+            if (flgAuth) directory = new Directory(PATH_START + mess.getLogin(), true);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -103,7 +103,7 @@ public class ClientHandler {
         return MessUtil.getRespOk(mess);
     }
     private Mess routeMess(Mess mess) {
-        return dir.work(mess);
+        return directory.work(mess);
     }
     private Mess filCopy(Mess mess) {
         if (mess.isFlgServer())
@@ -188,7 +188,7 @@ public class ClientHandler {
     }
     private Mess setServerFileForReceive(Mess mess) {
         try {
-            messResp = dir.work(mess);
+            messResp = directory.work(mess);
 
             if (!MessUtil.isRespOK(mess, messResp)) return MessUtil.getResp(mess, ResultCodes.NO_FILE_SELECTED);
 
@@ -203,7 +203,7 @@ public class ClientHandler {
     }
     private Mess setServerFileForSend(Mess mess) {
         try {
-            messResp = dir.work(new Mess(MessageTypes.DIR_INFO));
+            messResp = directory.work(new Mess(MessageTypes.DIR_INFO));
 
             if (messResp.getSelectType() == SelectTypes.FIL) {
                 mess.setDirPath(messResp.getDirPath());

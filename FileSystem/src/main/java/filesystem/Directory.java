@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public class Dir {
+public class Directory {
     private final String START_PATH;
     private final String COPY_PREFIX = "copy(x)_";
     
@@ -26,7 +26,7 @@ public class Dir {
     private ResultCodes code;
     private SelectTypes dictionary;
 
-    public Dir(String dirPath, boolean flgStartPath) throws FileNotFoundException {
+    public Directory(String dirPath, boolean flgStartPath) throws FileNotFoundException {
         File dirTest = new File(dirPath);
         if (!dirTest.exists())
             throw new FileNotFoundException("Указанной директории не существует!");
