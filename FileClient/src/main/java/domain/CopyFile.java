@@ -1,12 +1,12 @@
-package main;
+package domain;
 
 import dictionary.CommandTypes;
 import dictionary.MessageTypes;
 import dictionary.ResultCodes;
 import dictionary.SelectTypes;
+import main.Client;
 import message.Mess;
 import message.MessUtil;
-import services.CommunicationService;
 import services.Factory;
 
 import java.io.*;
@@ -14,7 +14,6 @@ import java.util.Properties;
 
 public class CopyFile implements ClientAction {
     private Client client;
-    private CommunicationService communicationService;
 
     private final int BUF_SIZE;
 
@@ -30,7 +29,6 @@ public class CopyFile implements ClientAction {
 
     public CopyFile(Client client) {
         this.client = client;
-        this.communicationService = Factory.getCommunicationService();
 
         Properties properties = Factory.getProperties();
         BUF_SIZE = Integer.parseInt(properties.getProperty("BUF_SIZE").replaceAll("\\D", ""));
@@ -131,7 +129,7 @@ public class CopyFile implements ClientAction {
     private Mess setClientFileForSend(Mess mess) {
         try {
 //            messResp = work(new Mess(MessageTypes.DIR_INFO));
-            messResp = communicationService.sendLocal(new Mess(MessageTypes.DIR_INFO));
+            messResp = client.getCommunication().sendLocal(new Mess(MessageTypes.DIR_INFO));
 
             if (messResp.getSelectType() == SelectTypes.FIL) {
                 mess.setDirPath(messResp.getDirPath());
@@ -150,13 +148,13 @@ public class CopyFile implements ClientAction {
     }
     private Mess setServerFileForSend(Mess mess) {
         mess.setCommand(CommandTypes.SET);
-        messResp = communicationService.sendRemote(mess);
+        messResp = client.getCommunication().sendRemote(mess);
 
         return messResp;
     }
     private Mess setServerFileForReceive(Mess mess) {
         mess.setCommand(CommandTypes.SET);
-        messResp = communicationService.sendRemote(mess);
+        messResp = client.getCommunication().sendRemote(mess);
 
         if (MessUtil.isRespOK(mess, messResp)) {
             mess.setDirPath(messResp.getDirPath());
@@ -167,7 +165,7 @@ public class CopyFile implements ClientAction {
     }
     private Mess setClientFileForReceive(Mess mess) {
         try {
-            messResp = communicationService.sendLocal(mess);
+            messResp = client.getCommunication().sendLocal(mess);
 
             fil = new File(messResp.getDirPath() + "\\" + messResp.getSelectName());
             bosf = new BufferedOutputStream(new FileOutputStream(fil), BUF_SIZE);
@@ -182,23 +180,23 @@ public class CopyFile implements ClientAction {
         mess.setCommand(CommandTypes.RECEIVE);
         mess.setValInt(arrByte.length);
 
-        communicationService.sendIO(mess);
-        communicationService.sendFilePortion(arrByte);
+        client.getCommunication().sendIO(mess);
+        client.getCommunication().sendFilePortion(arrByte);
 
-        return communicationService.receiveIO();
+        return client.getCommunication().receiveIO();
     }
     private Mess receiveFilePortion(Mess mess) {
         mess.setCommand(CommandTypes.SEND);
-        messResp = communicationService.sendRemote(mess);
+        messResp = client.getCommunication().sendRemote(mess);
 
         arrByte = new byte[messResp.getValInt()];
-        arrByte = communicationService.receiveFilePortion(arrByte.length);
+        arrByte = client.getCommunication().receiveFilePortion(arrByte.length);
 
         return messResp;
     }
     private Mess completeFileCopy(Mess mess) {
         mess.setCommand(CommandTypes.COMPLITE);
         mess.setValLong(fil.length());
-        return communicationService.sendRemote(mess);
+        return client.getCommunication().sendRemote(mess);
     }
 }

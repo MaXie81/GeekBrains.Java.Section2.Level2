@@ -12,6 +12,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import message.Mess;
 import dictionary.MessageTypes;
+import services.Factory;
 
 import javax.swing.*;
 
@@ -45,7 +46,7 @@ public class Controller {
     public HBox panelComand;
 
     public void initialize() {
-        client = new Client();
+        client = Factory.getClient();
         refreshForm();
     }
 
