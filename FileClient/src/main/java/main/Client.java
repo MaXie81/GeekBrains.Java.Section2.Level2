@@ -6,18 +6,7 @@ import dictionary.ResultCodes;
 import services.CommunicationService;
 import services.Factory;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-
-//import java.io.*;
-
 public class Client {
-//    private File fil;
-//    private byte[] arrByte;
-
-    private BufferedInputStream bisf;
-    private BufferedOutputStream bosf;
-
     private boolean isAuth = false;
 
     private Mess mess;
