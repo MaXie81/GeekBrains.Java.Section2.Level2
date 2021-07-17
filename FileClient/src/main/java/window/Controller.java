@@ -162,7 +162,7 @@ public class Controller {
     }
 
     private void auth() {
-        if (client.isFlgAuth())
+        if (client.isAuth())
             authOff();
         else
             authOn();
@@ -171,12 +171,12 @@ public class Controller {
         disconn();
     }
     private void refreshForm() {
-        panelAuth.setDisable(client.isFlgAuth());
-        btnConnect.setText(client.isFlgAuth() ? "Отключиться" : "Подключиться");
-        panelDir.setDisable(!client.isFlgAuth());
-        panelComand.setDisable(!client.isFlgAuth());
+        panelAuth.setDisable(client.isAuth());
+        btnConnect.setText(client.isAuth() ? "Отключиться" : "Подключиться");
+        panelDir.setDisable(!client.isAuth());
+        panelComand.setDisable(!client.isAuth());
 
-        if (client.isFlgAuth()) {
+        if (client.isAuth()) {
             setClientDirPanel();
             setServerDirPanel();
         }

@@ -1,6 +1,6 @@
 package fileserver;
 
-import factory.PropertiesFactory;
+import factory.PropertiesService;
 import filesystem.*;
 import message.*;
 import dictionary.MessageTypes;
@@ -37,7 +37,7 @@ public class ClientHandler {
         this.socket = socket;
         this.PORT = socket.getPort();
 
-        Properties properties = PropertiesFactory.getProperties(false);
+        Properties properties = PropertiesService.getProperties(false);
 
         PATH_START = properties.getProperty("PATH_START");
         BUF_SIZE = Integer.parseInt(properties.getProperty("BUF_SIZE").replaceAll("\\D", ""));
