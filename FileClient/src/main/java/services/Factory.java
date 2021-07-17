@@ -9,6 +9,7 @@ import java.util.Properties;
 
 public class Factory {
     private static final String PROPERTIES_URL = "properties/client.properties";
+    private static CommunicationService communicationService;
 
     public static Properties getProperties() {
         Factory factory = new Factory();
@@ -25,7 +26,8 @@ public class Factory {
         return null;
     }
     public static CommunicationService getCommunicationService() {
-        return new CommunicationService(getDirectory());
+        if (communicationService == null) communicationService = new CommunicationService(getDirectory());
+        return communicationService;
     }
 
     private URL getURL() {

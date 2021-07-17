@@ -19,8 +19,15 @@ public class Client {
     public Client() {
         communicationService = Factory.getCommunicationService();
     }
+    public Mess getMess() {
+        return mess;
+    }
+    public void setIsAuth(boolean isAuth) {
+        this.isAuth = isAuth;
+    }
     public Mess work(Mess mess) {
         if (!communicationService.isConnection()) communicationService.openConnection();
+        this.mess = mess;
         return processMess(mess);
     }
     private Mess processMess(Mess mess) {
@@ -33,8 +40,16 @@ public class Client {
                 return MessUtil.getErr(ResultCodes.ERR_MESS);
 
         switch (mess.getType()) {
-            case AUTH_ON    : return authOn(mess);
-            case AUTH_OFF   : return authOff(mess);
+            case AUTH_ON    :
+//                return authOn(mess);
+                messResp = new AuthOn(this).action();
+//                if (messResp.getCode() == ResultCodes.OK) isAuth = true;
+                return messResp;
+            case AUTH_OFF   :
+//                return authOff(mess);
+                messResp = new AuthOff(this).action();
+//                if (messResp.getCode() == ResultCodes.OK) isAuth = false;
+                return messResp;
             case CONN_CLOSE : return disconn(mess);
             case DIR_INFO   : return routeMess(mess);
             case DIR_SET    : return routeMess(mess);
