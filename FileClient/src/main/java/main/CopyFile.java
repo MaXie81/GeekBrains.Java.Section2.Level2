@@ -1,4 +1,4 @@
-package services;
+package main;
 
 import dictionary.CommandTypes;
 import dictionary.MessageTypes;
@@ -6,11 +6,16 @@ import dictionary.ResultCodes;
 import dictionary.SelectTypes;
 import message.Mess;
 import message.MessUtil;
+import services.CommunicationService;
+import services.Factory;
 
 import java.io.*;
 import java.util.Properties;
 
-public class FileCopyService {
+public class CopyFile implements ClientAction {
+    private Client client;
+    private CommunicationService communicationService;
+
     private final int BUF_SIZE;
 
     private File fil;
@@ -23,16 +28,21 @@ public class FileCopyService {
     private Mess messResp;
     private ResultCodes code;
 
-    private CommunicationService communicationService;
+    public CopyFile(Client client) {
+        this.client = client;
+        this.communicationService = Factory.getCommunicationService();
 
-    public FileCopyService(CommunicationService communicationService) {
         Properties properties = Factory.getProperties();
         BUF_SIZE = Integer.parseInt(properties.getProperty("BUF_SIZE").replaceAll("\\D", ""));
-
-        this.communicationService = communicationService;
     }
-
-    public Mess sendFile(Mess mess) {
+    @Override
+    public Mess action() {
+        if (client.getMess().isFlgServer())
+            return receiveFile(client.getMess());
+        else
+            return sendFile(client.getMess());
+    }
+    private Mess sendFile(Mess mess) {
         messResp = setClientFileForSend(mess);
         if (!MessUtil.isRespOK(mess, messResp)) return abortCopyFile(messResp);
 
@@ -54,7 +64,7 @@ public class FileCopyService {
         resetFile(true);
         return messResp;
     }
-    public Mess receiveFile(Mess mess) {
+    private Mess receiveFile(Mess mess) {
         messResp = setServerFileForReceive(mess);
         if (!MessUtil.isRespOK(mess, messResp)) return abortCopyFile(messResp);
 

@@ -5,7 +5,6 @@ import dictionary.MessageTypes;
 import dictionary.ResultCodes;
 import services.CommunicationService;
 import services.Factory;
-import services.FileCopyService;
 
 public class Client {
     private boolean isAuth = false;
@@ -42,20 +41,28 @@ public class Client {
         switch (mess.getType()) {
             case AUTH_ON    :
 //                return authOn(mess);
-                messResp = new AuthOn(this).action();
-//                if (messResp.getCode() == ResultCodes.OK) isAuth = true;
-                return messResp;
+                return new AuthOn(this).action();
             case AUTH_OFF   :
 //                return authOff(mess);
-                messResp = new AuthOff(this).action();
-//                if (messResp.getCode() == ResultCodes.OK) isAuth = false;
-                return messResp;
-            case CONN_CLOSE : return disconn(mess);
-            case DIR_INFO   : return routeMess(mess);
-            case DIR_SET    : return routeMess(mess);
-            case FILE_ADD   : return routeMess(mess);
-            case DIR_DEL    : return routeMess(mess);
-            case DIR_COPY   : return сopyFile(mess);
+                return new AuthOff(this).action();
+            case CONN_CLOSE :
+//                return disconn(mess);
+                return new Disconn(this).action();
+            case DIR_INFO   :
+//                return routeMess(mess);
+                return new RouteMess(this).action();
+            case DIR_SET    :
+//                return routeMess(mess);
+                return new RouteMess(this).action();
+            case FILE_ADD   :
+//                return routeMess(mess);
+                return new RouteMess(this).action();
+            case DIR_DEL    :
+//                return routeMess(mess);
+                return new RouteMess(this).action();
+            case DIR_COPY   :
+//                return сopyFile(mess);
+                return new CopyFile(this).action();
             default : return MessUtil.getErr(ResultCodes.ERR_MESS);
         }
     }
@@ -100,14 +107,14 @@ public class Client {
     private Mess routeMess(Mess mess) {
         return communicationService.send(mess);
     }
-    private Mess сopyFile(Mess mess) {
-        FileCopyService fileCopyService = new FileCopyService(communicationService);
-
-        if (mess.isFlgServer())
-            return fileCopyService.receiveFile(mess);
-        else
-            return fileCopyService.sendFile(mess);
-    }
+//    private Mess сopyFile(Mess mess) {
+//        CopyFile copyFile = new CopyFile(this);
+//
+//        if (mess.isFlgServer())
+//            return copyFile.receiveFile(mess);
+//        else
+//            return copyFile.sendFile(mess);
+//    }
     public boolean isAuth() {
         return isAuth;
     }

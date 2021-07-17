@@ -6,11 +6,11 @@ import message.MessUtil;
 import services.CommunicationService;
 import services.Factory;
 
-public class AuthOff implements ClientAction {
+public class Disconn implements ClientAction {
     private Client client;
     private CommunicationService communicationService;
 
-    public AuthOff(Client client) {
+    public Disconn(Client client) {
         this.client = client;
         this.communicationService = Factory.getCommunicationService();
     }
@@ -20,6 +20,7 @@ public class AuthOff implements ClientAction {
 
         if (MessUtil.isRespOK(client.getMess(), messResp)) {
             client.setIsAuth(false);
+            communicationService.closeConnection();
         } else {
             messResp = MessUtil.getErr(ResultCodes.ERR);
         }
