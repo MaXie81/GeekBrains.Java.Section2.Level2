@@ -5,9 +5,16 @@ import server.services.Factory;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Properties;
 
 public class Server {
-    private final int PORT = 6005;
+    private final int PORT;
+
+    public Server() {
+        Properties properties = Factory.getProperties();
+
+        PORT = Integer.parseInt(properties.getProperty("PORT"));
+    }
 
     public void start() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {

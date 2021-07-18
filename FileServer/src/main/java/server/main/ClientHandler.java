@@ -13,7 +13,6 @@ import java.util.Properties;
 
 public class ClientHandler {
     private final int PORT;
-//    private final String START_PATH_START;
 
     private boolean isAuth = false;
 
@@ -30,7 +29,6 @@ public class ClientHandler {
         this.PORT = socket.getPort();
 
         Properties properties = Factory.getProperties();
-//        START_PATH_START = properties.getProperty("START_PATH_START");
 
         new Thread(() -> work()).start();
     }
