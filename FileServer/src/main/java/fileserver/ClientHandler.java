@@ -1,12 +1,13 @@
 package fileserver;
 
-import factory.PropertiesService;
 import filesystem.*;
 import message.*;
 import dictionary.MessageTypes;
 import dictionary.ResultCodes;
 import dictionary.CommandTypes;
 import dictionary.SelectTypes;
+import services.Communication;
+import services.Factory;
 
 import java.io.*;
 import java.net.Socket;
@@ -14,7 +15,7 @@ import java.util.Properties;
 
 public class ClientHandler {
     private final int PORT;
-    private final String PATH_START;
+    private final String START_PATH_START;
     private final int BUF_SIZE;
 
     private Directory directory;
@@ -33,20 +34,25 @@ public class ClientHandler {
     private Mess messResp;
     private ResultCodes code;
 
+    private Communication communication;
+
     public ClientHandler(Socket socket) {
+        communication = new Communication(socket);
+
         this.socket = socket;
         this.PORT = socket.getPort();
 
-        Properties properties = PropertiesService.getProperties(false);
-
-        PATH_START = properties.getProperty("PATH_START");
+        Properties properties = Factory.getProperties();
+        START_PATH_START = properties.getProperty("START_PATH_START");
         BUF_SIZE = Integer.parseInt(properties.getProperty("BUF_SIZE").replaceAll("\\D", ""));
 
-        openConnection();
+//        openConnection();
 
         new Thread(() -> work()).start();
     }
     private void work() {
+        if (!communication.isConnection()) communication.openConnection();
+
         while (!socket.isClosed()) {
             try {
                 mess = Mess.fromJson(dis.readUTF());
@@ -89,7 +95,7 @@ public class ClientHandler {
             code = Server.authLoginPassword(mess.getLogin(), mess.getPassword());
             flgAuth = (code == ResultCodes.OK);
 
-            if (flgAuth) directory = new Directory(PATH_START + mess.getLogin(), true);
+            if (flgAuth) directory = new Directory(START_PATH_START + mess.getLogin(), true);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -305,16 +311,16 @@ public class ClientHandler {
         }
         return mess;
     }
-    private void openConnection() {
-        try {
-            dis = new DataInputStream(socket.getInputStream());
-            dos = new DataOutputStream(socket.getOutputStream());
-
-            System.out.println(PORT + " Клиент подключился");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void openConnection() {
+//        try {
+//            dis = new DataInputStream(socket.getInputStream());
+//            dos = new DataOutputStream(socket.getOutputStream());
+//
+//            System.out.println(PORT + " Клиент подключился");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
     private void closeConnection() {
         try {
             dos.close();

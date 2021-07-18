@@ -1,6 +1,7 @@
 package fileserver;
 
 import dictionary.ResultCodes;
+import services.Factory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -30,7 +31,7 @@ public class Server {
             System.out.println("Сервер запущен. Порт: " + serverSocket.getLocalPort());
             while (true) {
                 Socket socket = serverSocket.accept();
-                new ClientHandler(socket);
+                Factory.getClientHandler(socket);
             }
         } catch (IOException e) {
             e.printStackTrace();

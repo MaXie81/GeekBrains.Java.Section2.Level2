@@ -46,6 +46,7 @@ public class Controller {
     public HBox panelComand;
 
     public void initialize() {
+        System.out.println("!!!!!");
         client = Factory.getClient();
         refreshForm();
     }

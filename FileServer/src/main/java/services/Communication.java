@@ -1,17 +1,17 @@
 package services;
 
 import dictionary.CommandTypes;
+import dictionary.MessageTypes;
+import dictionary.ResultCodes;
 import filesystem.Directory;
 import message.Mess;
+import message.MessUtil;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.Properties;
 
 public class Communication {
-    private final String HOST;
     private final int PORT;
 
     private Socket socket;
@@ -24,10 +24,11 @@ public class Communication {
     private Mess mess;
     private Mess messResp;
 
-    public Communication() {
+    public Communication(Socket socket) {
         Properties properties = Factory.getProperties();
-        HOST = properties.getProperty("HOST");
-        PORT = Integer.parseInt(properties.getProperty("PORT"));
+
+        this.socket = socket;
+        PORT = socket.getPort();
 
         try {
             directory = new Directory(properties.getProperty("START_PATH_START"), false);
@@ -72,10 +73,10 @@ public class Communication {
         }
         return null;
     }
+
     public boolean isConnection() {
         return isConnection;
     }
-
     public void sendIO(Mess mess) {
         try {
             System.out.println(PORT + " < " + mess.getType() + " " + (mess.getCommand() != CommandTypes.NOT_DEFINED ? mess.getCommand() : ""));
@@ -86,21 +87,20 @@ public class Communication {
     }
     public Mess receiveIO() {
         try {
-            messResp = Mess.fromJson(dis.readUTF());
-            System.out.println(PORT + " > " + messResp.getType() + " " + messResp.getCode());
+            mess = Mess.fromJson(dis.readUTF());
+            System.out.println(PORT + " > " + mess.getType() + " " + mess.getCommand());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return messResp;
+        return mess;
     }
     public void openConnection() {
         try {
-            socket = new Socket(HOST, PORT);
             dis = new DataInputStream(socket.getInputStream());
             dos = new DataOutputStream(socket.getOutputStream());
             isConnection = true;
 
-            System.out.println(PORT + " Соединение с Сервером установлено");
+            System.out.println(PORT + " Клиент подключился");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -112,7 +112,7 @@ public class Communication {
             dis.close();
             socket.close();
 
-            System.out.println(PORT + " Соединение с Сервером закрыто");
+            System.out.println(PORT + " Клиент отключился");
         } catch (IOException e) {
             e.printStackTrace();
         }

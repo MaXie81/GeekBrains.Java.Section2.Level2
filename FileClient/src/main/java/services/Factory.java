@@ -11,11 +11,10 @@ import java.util.Properties;
 
 public class Factory {
     private static final String PROPERTIES_URL = "properties/client.properties";
-    private static Client client;
 
     public static Client getClient() {
-        if (client == null) client = new Client();
-        return client;
+        System.out.println("!!!!!");
+        return new Client();
     }
     public static Properties getProperties() {
         Factory factory = new Factory();
