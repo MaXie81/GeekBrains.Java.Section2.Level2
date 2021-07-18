@@ -1,9 +1,9 @@
-package domain;
+package filesystem.domain;
 
 import dictionary.MessageTypes;
 import dictionary.ResultCodes;
 import dictionary.SelectTypes;
-import filesystem.Directory;
+import filesystem.main.Directory;
 import message.Mess;
 import message.MessUtil;
 

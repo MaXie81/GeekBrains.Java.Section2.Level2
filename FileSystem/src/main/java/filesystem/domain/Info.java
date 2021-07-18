@@ -1,7 +1,7 @@
-package domain;
+package filesystem.domain;
 
 import dictionary.MessageTypes;
-import filesystem.Directory;
+import filesystem.main.Directory;
 import message.Mess;
 
 public class Info implements DirectoryAction {

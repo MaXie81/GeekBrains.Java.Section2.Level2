@@ -12,7 +12,6 @@ public class Server {
 
     public Server() {
         Properties properties = Factory.getProperties();
-
         PORT = Integer.parseInt(properties.getProperty("PORT"));
     }
 

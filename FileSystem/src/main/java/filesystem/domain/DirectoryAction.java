@@ -1,4 +1,4 @@
-package domain;
+package filesystem.domain;
 
 import message.Mess;
 

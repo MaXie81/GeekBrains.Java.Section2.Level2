@@ -1,7 +1,7 @@
 package client.services;
 
 import dictionary.CommandTypes;
-import filesystem.Directory;
+import filesystem.main.Directory;
 import message.Mess;
 
 import java.io.DataInputStream;
@@ -21,6 +21,7 @@ public class Communication {
     private Directory directory;
     private boolean isConnection = false;
 
+
     private Mess mess;
 
     public Communication() {
@@ -28,7 +29,7 @@ public class Communication {
         HOST = properties.getProperty("HOST");
         PORT = Integer.parseInt(properties.getProperty("PORT"));
 
-        directory = new Directory(properties.getProperty("START_PATH_START"), false);
+        directory = filesystem.services.Factory.getDirectory(properties.getProperty("DIR_PATH_START"), false);
     }
 
     public Mess send(Mess mess) {

@@ -1,11 +1,11 @@
-package filesystem;
+package filesystem.main;
 
 import dictionary.MessageTypes;
-import domain.*;
+import filesystem.domain.DirectoryAction;
 import message.Mess;
 import dictionary.ResultCodes;
 import dictionary.SelectTypes;
-import services.Factory;
+import filesystem.services.Factory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -44,11 +44,7 @@ public class Directory {
     public SelectTypes getSelectType() { return selectType; }
     public void setSelectType(SelectTypes selectType) { this.selectType = selectType; }
     public LinkedList<String> getDirectoryList() { return directoryList; }
-
-    public HashMap<MessageTypes, DirectoryAction> getMapDirectoryAction() {
-        return mapDirectoryAction;
-    }
-
+    public HashMap<MessageTypes, DirectoryAction> getMapDirectoryAction() { return mapDirectoryAction; }
     public Mess work(Mess mess) { return mapDirectoryAction.get(mess.getType()).action(mess); }
     public SelectTypes getType(String name) {
         if (name == null) return SelectTypes.INVALID_NAME;

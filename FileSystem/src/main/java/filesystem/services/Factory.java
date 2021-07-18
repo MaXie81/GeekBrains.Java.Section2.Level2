@@ -1,9 +1,9 @@
-package services;
+package filesystem.services;
 
 import dictionary.MessageTypes;
-import domain.*;
+import filesystem.domain.*;
 import factory.PropertiesService;
-import filesystem.Directory;
+import filesystem.main.Directory;
 
 import java.net.URL;
 import java.util.HashMap;

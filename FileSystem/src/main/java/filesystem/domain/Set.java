@@ -1,10 +1,9 @@
-package domain;
+package filesystem.domain;
 
 import dictionary.MessageTypes;
 import dictionary.ResultCodes;
-import filesystem.Directory;
+import filesystem.main.Directory;
 import message.Mess;
-import services.Factory;
 
 public class Set implements DirectoryAction {
     private Directory directory;

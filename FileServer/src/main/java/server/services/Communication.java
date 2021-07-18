@@ -1,7 +1,7 @@
 package server.services;
 
 import dictionary.CommandTypes;
-import filesystem.Directory;
+import filesystem.main.Directory;
 import message.Mess;
 
 import java.io.*;
@@ -26,7 +26,7 @@ public class Communication {
         this.socket = socket;
         PORT = socket.getPort();
 
-        directory = new Directory(properties.getProperty("START_PATH_START"), false);
+        directory = filesystem.services.Factory.getDirectory(properties.getProperty("DIR_PATH_START"), false);
     }
 
     public void sendRemote(Mess mess) {
