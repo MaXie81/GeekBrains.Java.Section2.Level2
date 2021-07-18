@@ -8,14 +8,20 @@
     <artifactId>FileCloud</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
     <modules>
         <module>Utilities</module>
+        <module>Message</module>
+        <module>FileSystem</module>
+        <module>FileServer</module>
+        <module>FileClient</module>
     </modules>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>geekbrains.java.section2.level2</groupId>
