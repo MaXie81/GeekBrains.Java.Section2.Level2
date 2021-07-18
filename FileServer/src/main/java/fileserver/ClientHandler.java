@@ -42,7 +42,7 @@ public class ClientHandler {
         PATH_START = properties.getProperty("PATH_START");
         BUF_SIZE = Integer.parseInt(properties.getProperty("BUF_SIZE").replaceAll("\\D", ""));
 
-        openConn();
+        openConnection();
 
         new Thread(() -> work()).start();
     }
@@ -57,7 +57,7 @@ public class ClientHandler {
                 System.out.println(PORT + " < " + messResp.getType() + " " + messResp.getCode());
                 dos.writeUTF(messResp.toJson());
 
-                if (messResp.getType() == MessageTypes.CONN_CLOSE_RESP && messResp.getCode() == ResultCodes.OK) closeConn();
+                if (messResp.getType() == MessageTypes.CONN_CLOSE_RESP && messResp.getCode() == ResultCodes.OK) closeConnection();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -153,8 +153,6 @@ public class ClientHandler {
     private void readFilePortion() {
         try {
             int size = bisf.available() < BUF_SIZE ? bisf.available() : BUF_SIZE;
-//            System.out.println("!!!!bisf.available() " +  bisf.available());
-//            System.out.println("!!!!size " +  size);
             arrByte = new byte[size];
             bisf.read(arrByte);
         } catch (IOException e) {
@@ -307,7 +305,7 @@ public class ClientHandler {
         }
         return mess;
     }
-    private void openConn() {
+    private void openConnection() {
         try {
             dis = new DataInputStream(socket.getInputStream());
             dos = new DataOutputStream(socket.getOutputStream());
@@ -317,7 +315,7 @@ public class ClientHandler {
             e.printStackTrace();
         }
     }
-    private void closeConn() {
+    private void closeConnection() {
         try {
             dos.close();
             dis.close();

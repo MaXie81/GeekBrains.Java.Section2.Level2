@@ -24,54 +24,18 @@ public class CommunicationService {
     private Mess mess;
     private Mess messResp;
 
-    public CommunicationService(Directory directory) {
+    public CommunicationService() {
         Properties properties = Factory.getProperties();
         HOST = properties.getProperty("HOST");
         PORT = Integer.parseInt(properties.getProperty("PORT"));
 
-        this.directory = directory;
-    }
-    public void openConnection() {
         try {
-            socket = new Socket(HOST, PORT);
-            dis = new DataInputStream(socket.getInputStream());
-            dos = new DataOutputStream(socket.getOutputStream());
-            isConnection = true;
+            directory = new Directory(properties.getProperty("START_PATH_START"), false);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-            System.out.println("Соединение с Сервером установлено");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public void closeConnection() {
-        try {
-            isConnection = false;
-            dos.close();
-            dis.close();
-            socket.close();
-
-            System.out.println("Соединение с Сервером закрыто");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public void sendIO(Mess mess) {
-        try {
-            System.out.println(PORT + " < " + mess.getType() + " " + (mess.getCommand() != CommandTypes.NOT_DEFINED ? mess.getCommand() : ""));
-            dos.writeUTF(mess.toJson());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public Mess receiveIO() {
-        try {
-            messResp = Mess.fromJson(dis.readUTF());
-            System.out.println(PORT + " > " + messResp.getType() + " " + messResp.getCode());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return messResp;
-    }
     public Mess send(Mess mess) {
         if (mess.isFlgServer())
             return sendRemote(mess);
@@ -109,5 +73,47 @@ public class CommunicationService {
     }
     public boolean isConnection() {
         return isConnection;
+    }
+
+    public void sendIO(Mess mess) {
+        try {
+            System.out.println(PORT + " < " + mess.getType() + " " + (mess.getCommand() != CommandTypes.NOT_DEFINED ? mess.getCommand() : ""));
+            dos.writeUTF(mess.toJson());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public Mess receiveIO() {
+        try {
+            messResp = Mess.fromJson(dis.readUTF());
+            System.out.println(PORT + " > " + messResp.getType() + " " + messResp.getCode());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return messResp;
+    }
+    public void openConnection() {
+        try {
+            socket = new Socket(HOST, PORT);
+            dis = new DataInputStream(socket.getInputStream());
+            dos = new DataOutputStream(socket.getOutputStream());
+            isConnection = true;
+
+            System.out.println("Соединение с Сервером установлено");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void closeConnection() {
+        try {
+            isConnection = false;
+            dos.close();
+            dis.close();
+            socket.close();
+
+            System.out.println("Соединение с Сервером закрыто");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

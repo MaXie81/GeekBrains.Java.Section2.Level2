@@ -128,8 +128,7 @@ public class CopyFile implements ClientAction {
     }
     private Mess setClientFileForSend(Mess mess) {
         try {
-//            messResp = work(new Mess(MessageTypes.DIR_INFO));
-            messResp = client.getCommunication().sendLocal(new Mess(MessageTypes.DIR_INFO));
+            messResp = client.work(new Mess(MessageTypes.DIR_INFO));
 
             if (messResp.getSelectType() == SelectTypes.FIL) {
                 mess.setDirPath(messResp.getDirPath());
