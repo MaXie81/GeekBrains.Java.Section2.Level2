@@ -11,7 +11,6 @@ import java.util.Properties;
 
 public class Factory {
     private static final String PROPERTIES_URL = "properties/client.properties";
-    private static HashMap<MessageTypes, ClientAction> mapClientAction;
     private static Client client;
 
     public static Client getClient() {
@@ -23,17 +22,17 @@ public class Factory {
         return PropertiesService.getProperties(factory.getURL());
     }
     public static HashMap<MessageTypes, ClientAction> getMapClientAction(Client client) {
-        if (mapClientAction == null) {
-            mapClientAction = new HashMap<>();
-            mapClientAction.put(MessageTypes.AUTH_ON, new AuthOn(client));
-            mapClientAction.put(MessageTypes.AUTH_OFF, new AuthOff(client));
-            mapClientAction.put(MessageTypes.CONN_CLOSE, new Disconn(client));
-            mapClientAction.put(MessageTypes.DIR_INFO, new RouteMess(client));
-            mapClientAction.put(MessageTypes.DIR_SET, new RouteMess(client));
-            mapClientAction.put(MessageTypes.FILE_ADD, new RouteMess(client));
-            mapClientAction.put(MessageTypes.DIR_DEL, new RouteMess(client));
-            mapClientAction.put(MessageTypes.DIR_COPY, new CopyFile(client));
-        }
+        HashMap<MessageTypes, ClientAction> mapClientAction = new HashMap<>();
+
+        mapClientAction.put(MessageTypes.AUTH_ON, new AuthOn(client));
+        mapClientAction.put(MessageTypes.AUTH_OFF, new AuthOff(client));
+        mapClientAction.put(MessageTypes.CONN_CLOSE, new Disconn(client));
+        mapClientAction.put(MessageTypes.DIR_INFO, new RouteMess(client));
+        mapClientAction.put(MessageTypes.DIR_SET, new RouteMess(client));
+        mapClientAction.put(MessageTypes.FILE_ADD, new RouteMess(client));
+        mapClientAction.put(MessageTypes.DIR_DEL, new RouteMess(client));
+        mapClientAction.put(MessageTypes.DIR_COPY, new CopyFile(client));
+
         return mapClientAction;
     }
     private URL getURL() {

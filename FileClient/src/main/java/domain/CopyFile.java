@@ -34,11 +34,11 @@ public class CopyFile implements ClientAction {
         BUF_SIZE = Integer.parseInt(properties.getProperty("BUF_SIZE").replaceAll("\\D", ""));
     }
     @Override
-    public Mess action() {
-        if (client.getMess().isFlgServer())
-            return receiveFile(client.getMess());
+    public Mess action(Mess mess) {
+        if (mess.isFlgServer())
+            return receiveFile(mess);
         else
-            return sendFile(client.getMess());
+            return sendFile(mess);
     }
     private Mess sendFile(Mess mess) {
         messResp = setClientFileForSend(mess);

@@ -12,10 +12,10 @@ public class Disconn implements ClientAction {
         this.client = client;
     }
     @Override
-    public Mess action() {
-        Mess messResp = client.getCommunication().sendRemote(client.getMess());
+    public Mess action(Mess mess) {
+        Mess messResp = client.getCommunication().sendRemote(mess);
 
-        if (MessUtil.isRespOK(client.getMess(), messResp)) {
+        if (MessUtil.isRespOK(mess, messResp)) {
             client.setIsAuth(false);
             client.getCommunication().closeConnection();
         } else {

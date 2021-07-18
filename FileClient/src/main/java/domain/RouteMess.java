@@ -10,7 +10,7 @@ public class RouteMess implements ClientAction {
         this.client = client;
     }
     @Override
-    public Mess action() {
-        return client.getCommunication().send(client.getMess());
+    public Mess action(Mess mess) {
+        return client.getCommunication().send(mess);
     }
 }

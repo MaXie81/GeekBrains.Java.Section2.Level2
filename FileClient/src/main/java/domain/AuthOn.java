@@ -20,8 +20,8 @@ public class AuthOn implements ClientAction {
     }
 
     @Override
-    public Mess action() {
-        Mess messResp = client.getCommunication().sendRemote(client.getMess());
+    public Mess action(Mess mess) {
+        Mess messResp = client.getCommunication().sendRemote(mess);
 
         if (!LIST_EXPECT_RESULTCODE.contains(messResp.getCode()))
             messResp = MessUtil.getRespErr(ResultCodes.ERR);

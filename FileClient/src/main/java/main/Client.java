@@ -1,25 +1,34 @@
 package main;
 
+import domain.ClientAction;
 import message.*;
 import dictionary.MessageTypes;
 import dictionary.ResultCodes;
 import services.Communication;
 import services.Factory;
 
+import java.util.HashMap;
+
 public class Client {
     private boolean isAuth = false;
 
     private Communication communication;
-
-    private Mess mess;
-    private Mess messResp;
-    private ResultCodes code;
+    private HashMap<MessageTypes, ClientAction> mapClientAction;
 
     public Client() {
         communication = new Communication();
+        mapClientAction = Factory.getMapClientAction(this);
     }
-    public Mess getMess() {
-        return mess;
+    public Mess work(Mess mess) {
+        if (!communication.isConnection()) communication.openConnection();
+        if (!isAuth)
+            if (!(mess.getType() == MessageTypes.AUTH_ON || mess.getType() == MessageTypes.CONN_CLOSE))
+                return MessUtil.getErr(ResultCodes.ERR_MESS);
+        if (isAuth)
+            if (mess.getType() == MessageTypes.AUTH_ON)
+                return MessUtil.getErr(ResultCodes.ERR_MESS);
+
+        return mapClientAction.get(mess.getType()).action(mess);
     }
     public void setIsAuth(boolean isAuth) {
         this.isAuth = isAuth;
@@ -29,21 +38,5 @@ public class Client {
     }
     public Communication getCommunication() {
         return communication;
-    }
-    public Mess work(Mess mess) {
-        if (!communication.isConnection()) communication.openConnection();
-        this.mess = mess;
-        return processMess(mess);
-    }
-    private Mess processMess(Mess mess) {
-        if (!isAuth)
-            if (!(mess.getType() == MessageTypes.AUTH_ON || mess.getType() == MessageTypes.CONN_CLOSE))
-                return MessUtil.getErr(ResultCodes.ERR_MESS);
-
-        if (isAuth)
-            if (mess.getType() == MessageTypes.AUTH_ON)
-                return MessUtil.getErr(ResultCodes.ERR_MESS);
-
-        return Factory.getMapClientAction(this).get(mess.getType()).action();
     }
 }
