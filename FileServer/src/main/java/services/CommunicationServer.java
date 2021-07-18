@@ -33,15 +33,8 @@ public class CommunicationServer {
         }
     }
 
-//    public Mess send(Mess mess) {
-//        if (mess.isFlgServer())
-//            return sendRemote(mess);
-//        else
-//            return sendLocal(mess);
-//    }
     public void sendRemote(Mess mess) {
         sendIO(mess);
-//        return receiveIO();
     }
     public Mess sendLocal(Mess mess) {
         return directory.work(mess);

@@ -117,8 +117,6 @@ public class CopyFile_ implements ServerAction {
 
     private Mess setServerFileForReceive(Mess mess) {
         try {
-//            messResp = directory.work(mess);
-
             messResp = client.getCommunication().sendLocal(mess);
 
             if (!MessUtil.isRespOK(mess, messResp)) return MessUtil.getResp(mess, ResultCodes.NO_FILE_SELECTED);
@@ -134,7 +132,6 @@ public class CopyFile_ implements ServerAction {
     }
     private Mess setServerFileForSend(Mess mess) {
         try {
-//            messResp = directory.work(new Mess(MessageTypes.DIR_INFO));
             messResp = client.getCommunication().sendLocal(new Mess(MessageTypes.DIR_INFO));
 
             if (messResp.getSelectType() == SelectTypes.FIL) {
@@ -178,7 +175,6 @@ public class CopyFile_ implements ServerAction {
         return messResp;
     }
     private Mess sendFilePortion() {
-//        try {
             mess = client.getCommunication().receiveIO();
 
             if (mess.getType() == MessageTypes.DIR_COPY) {
@@ -190,10 +186,6 @@ public class CopyFile_ implements ServerAction {
                         client.getCommunication().sendIO(messResp);
                         client.getCommunication().sendFilePortion(arrByte);
 
-//                        dos.write(arrByte);
-//                        dos.flush();
-//
-//                        System.out.println(PORT + " << " + "передано: " + arrByte.length);
                         break;
 
                     default :
@@ -204,10 +196,6 @@ public class CopyFile_ implements ServerAction {
                 messResp = MessUtil.getErr(ResultCodes.ERR_MESS);
             }
             return messResp;
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        return null;
     }
 
     private Mess filCopyCompl() {
