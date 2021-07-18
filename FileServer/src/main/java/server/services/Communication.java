@@ -26,11 +26,7 @@ public class Communication {
         this.socket = socket;
         PORT = socket.getPort();
 
-        try {
-            directory = new Directory(properties.getProperty("START_PATH_START"), false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        directory = new Directory(properties.getProperty("START_PATH_START"), false);
     }
 
     public void sendRemote(Mess mess) {

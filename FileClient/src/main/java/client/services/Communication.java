@@ -28,11 +28,7 @@ public class Communication {
         HOST = properties.getProperty("HOST");
         PORT = Integer.parseInt(properties.getProperty("PORT"));
 
-        try {
-            directory = new Directory(properties.getProperty("START_PATH_START"), false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        directory = new Directory(properties.getProperty("START_PATH_START"), false);
     }
 
     public Mess send(Mess mess) {

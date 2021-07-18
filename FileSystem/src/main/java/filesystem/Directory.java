@@ -1,72 +1,55 @@
 package filesystem;
 
+import dictionary.MessageTypes;
 import domain.*;
 import message.Mess;
 import dictionary.ResultCodes;
 import dictionary.SelectTypes;
+import services.Factory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Directory {
     private final String START_PATH;
-    
+
+    private HashMap<MessageTypes, DirectoryAction> mapDirectoryAction;
+
     private File directory = null;
     private Boolean isRootDirectory;
     private String select = null;
     private SelectTypes selectType;
     private LinkedList<String> directoryList;
 
-    public Directory(String dirPath, boolean flgStartPath) throws FileNotFoundException {
+    public Directory(String dirPath, boolean flgStartPath)  {
+        mapDirectoryAction = Factory.getMapDirectoryAction(this);
+
         File dirTest = new File(dirPath);
         if (!dirTest.exists())
-            throw new FileNotFoundException("Указанной директории не существует!");
+            try {
+                throw new FileNotFoundException("Указанной директории не существует!");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
 
         START_PATH = flgStartPath ? dirPath : "";
         reset(dirTest, "*");
     }
-    public File getDirectory() {
-        return directory;
+    public File getDirectory() { return directory; }
+    public Boolean isRootDirectory() { return isRootDirectory; }
+    public String getSelect() { return select; }
+    public SelectTypes getSelectType() { return selectType; }
+    public void setSelectType(SelectTypes selectType) { this.selectType = selectType; }
+    public LinkedList<String> getDirectoryList() { return directoryList; }
+
+    public HashMap<MessageTypes, DirectoryAction> getMapDirectoryAction() {
+        return mapDirectoryAction;
     }
 
-    public Boolean isRootDirectory() {
-        return isRootDirectory;
-    }
-
-    public String getSelect() {
-        return select;
-    }
-
-    public SelectTypes getSelectType() {
-        return selectType;
-    }
-
-    public void setSelectType(SelectTypes selectType) {
-        this.selectType = selectType;
-    }
-
-    public LinkedList<String> getDirectoryList() {
-        return directoryList;
-    }
-
-    public Mess work(Mess mess) {
-        switch (mess.getType()) {
-            case DIR_INFO :
-                return new Info(this).action(mess);
-            case DIR_SET  :
-                return new Set(this).action(mess);
-            case FILE_ADD :
-                return new CreateDirectory(this).action(mess);
-            case DIR_DEL  :
-                return new Delete(this).action(mess);
-            case DIR_COPY :
-                return new AddFile(this).action(mess);
-
-            default : throw new IllegalStateException("Unexpected value: " + mess.getType());
-        }
-    }
+    public Mess work(Mess mess) { return mapDirectoryAction.get(mess.getType()).action(mess); }
     public SelectTypes getType(String name) {
         if (name == null) return SelectTypes.INVALID_NAME;
         if (name.equals("")) return SelectTypes.INVALID_NAME;
