@@ -23,9 +23,7 @@ public class CopyFile implements ClientAction {
     private BufferedInputStream bisf;
     private BufferedOutputStream bosf;
 
-    private Mess mess;
     private Mess messResp;
-    private ResultCodes code;
 
     public CopyFile(Client client) {
         this.client = client;
@@ -81,17 +79,7 @@ public class CopyFile implements ClientAction {
         resetFile(false);
         return messResp;
     }
-    private Mess abortCopyFile(Mess messResp) {
-        try {
-            if (bisf != null) bisf.close();
-            if (bosf != null) bosf.close();
-            if (fil != null) fil = null;
 
-            return messResp;
-        } catch (IOException e) {
-            return MessUtil.getRespErr(ResultCodes.ERR);
-        }
-    }
     private void readFilePortion() {
         try {
             int size = bisf.available() < BUF_SIZE ? bisf.available() : BUF_SIZE;
@@ -126,6 +114,7 @@ public class CopyFile implements ClientAction {
             }
         }
     }
+
     private Mess setClientFileForSend(Mess mess) {
         try {
             messResp = client.work(new Mess(MessageTypes.DIR_INFO));
@@ -151,6 +140,7 @@ public class CopyFile implements ClientAction {
 
         return messResp;
     }
+
     private Mess setServerFileForReceive(Mess mess) {
         mess.setCommand(CommandTypes.SET);
         messResp = client.getCommunication().sendRemote(mess);
@@ -175,6 +165,7 @@ public class CopyFile implements ClientAction {
             return MessUtil.getRespErr(ResultCodes.ERR);
         }
     }
+
     private Mess sendFilePortion(Mess mess) {
         mess.setCommand(CommandTypes.RECEIVE);
         mess.setValInt(arrByte.length);
@@ -193,9 +184,22 @@ public class CopyFile implements ClientAction {
 
         return messResp;
     }
+
     private Mess completeFileCopy(Mess mess) {
         mess.setCommand(CommandTypes.COMPLITE);
         mess.setValLong(fil.length());
         return client.getCommunication().sendRemote(mess);
+    }
+
+    private Mess abortCopyFile(Mess messResp) {
+        try {
+            if (bisf != null) bisf.close();
+            if (bosf != null) bosf.close();
+            if (fil != null) fil = null;
+
+            return messResp;
+        } catch (IOException e) {
+            return MessUtil.getRespErr(ResultCodes.ERR);
+        }
     }
 }

@@ -22,7 +22,6 @@ public class Communication {
     private boolean isConnection = false;
 
     private Mess mess;
-    private Mess messResp;
 
     public Communication() {
         Properties properties = Factory.getProperties();
@@ -86,12 +85,12 @@ public class Communication {
     }
     public Mess receiveIO() {
         try {
-            messResp = Mess.fromJson(dis.readUTF());
-            System.out.println(PORT + " > " + messResp.getType() + " " + messResp.getCode());
+            mess = Mess.fromJson(dis.readUTF());
+            System.out.println(PORT + " > " + mess.getType() + " " + mess.getCode());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return messResp;
+        return mess;
     }
     public void openConnection() {
         try {

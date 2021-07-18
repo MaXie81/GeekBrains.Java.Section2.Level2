@@ -13,7 +13,6 @@ public class Factory {
     private static final String PROPERTIES_URL = "properties/client.properties";
 
     public static Client getClient() {
-        System.out.println("!!!!!");
         return new Client();
     }
     public static Properties getProperties() {

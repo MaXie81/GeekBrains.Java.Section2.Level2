@@ -1,17 +1,14 @@
 package services;
 
 import dictionary.CommandTypes;
-import dictionary.MessageTypes;
-import dictionary.ResultCodes;
 import filesystem.Directory;
 import message.Mess;
-import message.MessUtil;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.Properties;
 
-public class Communication {
+public class CommunicationServer {
     private final int PORT;
 
     private Socket socket;
@@ -22,10 +19,9 @@ public class Communication {
     private boolean isConnection = false;
 
     private Mess mess;
-    private Mess messResp;
 
-    public Communication(Socket socket) {
-        Properties properties = Factory.getProperties();
+    public CommunicationServer(Socket socket) {
+        Properties properties = Factory_.getProperties();
 
         this.socket = socket;
         PORT = socket.getPort();
@@ -37,18 +33,21 @@ public class Communication {
         }
     }
 
-    public Mess send(Mess mess) {
-        if (mess.isFlgServer())
-            return sendRemote(mess);
-        else
-            return sendLocal(mess);
-    }
-    public Mess sendRemote(Mess mess) {
+//    public Mess send(Mess mess) {
+//        if (mess.isFlgServer())
+//            return sendRemote(mess);
+//        else
+//            return sendLocal(mess);
+//    }
+    public void sendRemote(Mess mess) {
         sendIO(mess);
-        return receiveIO();
+//        return receiveIO();
     }
     public Mess sendLocal(Mess mess) {
         return directory.work(mess);
+    }
+    public Mess receive() {
+        return receiveIO();
     }
 
     public void sendFilePortion(byte[] arrByte) {
@@ -79,7 +78,7 @@ public class Communication {
     }
     public void sendIO(Mess mess) {
         try {
-            System.out.println(PORT + " < " + mess.getType() + " " + (mess.getCommand() != CommandTypes.NOT_DEFINED ? mess.getCommand() : ""));
+            System.out.println(PORT + " < " + mess.getType() + " " + mess.getCode());
             dos.writeUTF(mess.toJson());
         } catch (IOException e) {
             e.printStackTrace();
@@ -88,7 +87,7 @@ public class Communication {
     public Mess receiveIO() {
         try {
             mess = Mess.fromJson(dis.readUTF());
-            System.out.println(PORT + " > " + mess.getType() + " " + mess.getCommand());
+            System.out.println(PORT + " > " + mess.getType() + " " + (mess.getCommand() != CommandTypes.NOT_DEFINED ? mess.getCommand() : ""));
         } catch (IOException e) {
             e.printStackTrace();
         }

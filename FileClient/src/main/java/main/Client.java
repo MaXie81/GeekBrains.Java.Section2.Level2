@@ -14,7 +14,7 @@ public class Client {
 
     private Communication communication;
     private HashMap<MessageTypes, ClientAction> mapClientAction;
-
+    
     public Client() {
         communication = new Communication();
         mapClientAction = Factory.getMapClientAction(this);
