@@ -12,7 +12,6 @@ import java.util.Properties;
 public class Factory {
     private static final String PROPERTIES_URL = "properties/client.properties";
     private static HashMap<MessageTypes, ClientAction> mapClientAction;
-    private static CommunicationService communicationService;
     private static Client client;
 
     public static Client getClient() {
@@ -22,10 +21,6 @@ public class Factory {
     public static Properties getProperties() {
         Factory factory = new Factory();
         return PropertiesService.getProperties(factory.getURL());
-    }
-    public static CommunicationService getCommunicationService() {
-        if (communicationService == null) communicationService = new CommunicationService();
-        return communicationService;
     }
     public static HashMap<MessageTypes, ClientAction> getMapClientAction(Client client) {
         if (mapClientAction == null) {

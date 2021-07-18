@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Properties;
 
-public class CommunicationService {
+public class Communication {
     private final String HOST;
     private final int PORT;
 
@@ -24,7 +24,7 @@ public class CommunicationService {
     private Mess mess;
     private Mess messResp;
 
-    public CommunicationService() {
+    public Communication() {
         Properties properties = Factory.getProperties();
         HOST = properties.getProperty("HOST");
         PORT = Integer.parseInt(properties.getProperty("PORT"));

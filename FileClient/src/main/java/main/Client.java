@@ -3,20 +3,20 @@ package main;
 import message.*;
 import dictionary.MessageTypes;
 import dictionary.ResultCodes;
-import services.CommunicationService;
+import services.Communication;
 import services.Factory;
 
 public class Client {
     private boolean isAuth = false;
 
-    private CommunicationService communication;
+    private Communication communication;
 
     private Mess mess;
     private Mess messResp;
     private ResultCodes code;
 
     public Client() {
-        communication = Factory.getCommunicationService();
+        communication = new Communication();
     }
     public Mess getMess() {
         return mess;
@@ -27,7 +27,7 @@ public class Client {
     public boolean isAuth() {
         return isAuth;
     }
-    public CommunicationService getCommunication() {
+    public Communication getCommunication() {
         return communication;
     }
     public Mess work(Mess mess) {
