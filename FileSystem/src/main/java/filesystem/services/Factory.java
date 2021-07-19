@@ -12,8 +12,8 @@ import java.util.Properties;
 public class Factory {
     private static final String PROPERTIES_URL = "properties/directory.properties";
     
-    public static Directory getDirectory(String dirPath, boolean flgStartPath) {
-        return new Directory(dirPath, flgStartPath);
+    public static Directory getDirectory(String dirPath) {
+        return new Directory(dirPath);
     }
     public static Properties getProperties() {
         Factory factory = new Factory();
@@ -22,11 +22,11 @@ public class Factory {
     public static HashMap<MessageTypes, DirectoryAction> getMapDirectoryAction(Directory directory) {
         HashMap<MessageTypes, DirectoryAction> mapDirectoryAction = new HashMap<>();
 
-        mapDirectoryAction.put(MessageTypes.DIR_INFO, new Info(directory));
-        mapDirectoryAction.put(MessageTypes.DIR_SET, new Set(directory));
-        mapDirectoryAction.put(MessageTypes.FILE_ADD, new CreateDirectory(directory));
-        mapDirectoryAction.put(MessageTypes.DIR_DEL, new Delete(directory));
-        mapDirectoryAction.put(MessageTypes.DIR_COPY, new AddFile(directory));
+        mapDirectoryAction.put(MessageTypes.GET_DIRECTORY, new GetInfo(directory));
+        mapDirectoryAction.put(MessageTypes.SET_DIRECTORY, new Set(directory));
+        mapDirectoryAction.put(MessageTypes.ADD_DIRECTORY, new CreateDirectory(directory));
+        mapDirectoryAction.put(MessageTypes.DELETE, new Delete(directory));
+        mapDirectoryAction.put(MessageTypes.COPY_FILE, new AddFile(directory));
 
         return mapDirectoryAction;
     }

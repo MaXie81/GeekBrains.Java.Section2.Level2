@@ -18,7 +18,8 @@ public class AuthOn implements ServerAction {
         ResultCodes code = Factory.authLoginPassword(mess.getLogin(), mess.getPassword());
         client.setIsAuth(code == ResultCodes.OK);
 
+        if (client.isAuth()) client.getCommunication().setDirectory(mess.getLogin());
+
         return MessUtil.getResp(mess, code);
     }
-
 }

@@ -132,7 +132,7 @@ public class CopyFile implements ServerAction {
     }
     private Mess setServerFileForSend(Mess mess) {
         try {
-            messResp = client.getCommunication().sendLocal(new Mess(MessageTypes.DIR_INFO));
+            messResp = client.getCommunication().sendLocal(new Mess(MessageTypes.GET_DIRECTORY));
 
             if (messResp.getSelectType() == SelectTypes.FIL) {
                 mess.setDirPath(messResp.getDirPath());
@@ -150,7 +150,7 @@ public class CopyFile implements ServerAction {
 
     private Mess receiveFilePortion() {
         mess = client.getCommunication().receiveIO();
-        if (mess.getType() == MessageTypes.DIR_COPY) {
+        if (mess.getType() == MessageTypes.COPY_FILE) {
             switch (mess.getCommand()) {
                 case RECEIVE :
                     arrByte = new byte[mess.getValInt()];
@@ -177,7 +177,7 @@ public class CopyFile implements ServerAction {
     private Mess sendFilePortion() {
         mess = client.getCommunication().receiveIO();
 
-        if (mess.getType() == MessageTypes.DIR_COPY) {
+        if (mess.getType() == MessageTypes.COPY_FILE) {
             switch (mess.getCommand()) {
                 case SEND :
                     messResp = MessUtil.getRespOk(mess);
@@ -201,7 +201,7 @@ public class CopyFile implements ServerAction {
     private Mess filCopyCompl() {
         Mess mess = client.getCommunication().receiveIO();
 
-        messResp = new Mess(MessageTypes.DIR_COPY_RESP);
+        messResp = new Mess(MessageTypes.COPY_FILE_RESP);
 
         return messResp;
     }

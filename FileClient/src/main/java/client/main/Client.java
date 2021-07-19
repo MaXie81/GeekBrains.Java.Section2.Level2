@@ -22,7 +22,7 @@ public class Client {
     public Mess work(Mess mess) {
         if (!communication.isConnection()) communication.openConnection();
         if (!isAuth)
-            if (!(mess.getType() == MessageTypes.AUTH_ON || mess.getType() == MessageTypes.CONN_CLOSE))
+            if (!(mess.getType() == MessageTypes.AUTH_ON || mess.getType() == MessageTypes.CLOSE_CONNECTION))
                 return MessUtil.getErr(ResultCodes.ERR_MESS);
         if (isAuth)
             if (mess.getType() == MessageTypes.AUTH_ON)
@@ -30,13 +30,7 @@ public class Client {
 
         return mapClientAction.get(mess.getType()).action(mess);
     }
-    public void setIsAuth(boolean isAuth) {
-        this.isAuth = isAuth;
-    }
-    public boolean isAuth() {
-        return isAuth;
-    }
-    public Communication getCommunication() {
-        return communication;
-    }
+    public void setIsAuth(boolean isAuth) { this.isAuth = isAuth; }
+    public boolean isAuth() { return isAuth; }
+    public Communication getCommunication() { return communication; }
 }

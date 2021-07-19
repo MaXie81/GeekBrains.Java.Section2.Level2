@@ -10,12 +10,12 @@ public class MessUtil {
     static {
         mapMessResp.put(MessageTypes.AUTH_ON, MessageTypes.AUTH_ON_RESP);
         mapMessResp.put(MessageTypes.AUTH_OFF, MessageTypes.AUTH_OFF_RESP);
-        mapMessResp.put(MessageTypes.CONN_CLOSE, MessageTypes.CONN_CLOSE_RESP);
-        mapMessResp.put(MessageTypes.DIR_SET, MessageTypes.DIR_SET_RESP);
-        mapMessResp.put(MessageTypes.DIR_INFO, MessageTypes.DIR_INFO_RESP);
-        mapMessResp.put(MessageTypes.DIR_COPY, MessageTypes.DIR_COPY_RESP);
-        mapMessResp.put(MessageTypes.FILE_ADD, MessageTypes.FILE_ADD_RESP);
-        mapMessResp.put(MessageTypes.DIR_DEL, MessageTypes.DIR_DEL_RESP);
+        mapMessResp.put(MessageTypes.CLOSE_CONNECTION, MessageTypes.CLOSE_CONNECTION_RESP);
+        mapMessResp.put(MessageTypes.SET_DIRECTORY, MessageTypes.SET_DIRECTORY_RESP);
+        mapMessResp.put(MessageTypes.GET_DIRECTORY, MessageTypes.GET_DIRECTORY_RESP);
+        mapMessResp.put(MessageTypes.COPY_FILE, MessageTypes.COPY_FILE_RESP);
+        mapMessResp.put(MessageTypes.ADD_DIRECTORY, MessageTypes.ADD_DIRECTORY_RESP);
+        mapMessResp.put(MessageTypes.DELETE, MessageTypes.DELETE_RESP);
 
     }
     public static boolean isRespOK(Mess mess, Mess messResp) {

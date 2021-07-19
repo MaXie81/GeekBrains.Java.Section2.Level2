@@ -26,7 +26,12 @@ public class Communication {
         this.socket = socket;
         PORT = socket.getPort();
 
-        directory = filesystem.services.Factory.getDirectory(properties.getProperty("DIR_PATH_START"), false);
+        directory = null;
+    }
+
+    public void setDirectory(String directoryName) {
+        Properties properties = Factory.getProperties();
+        this.directory = filesystem.services.Factory.getDirectory(properties.getProperty("DIR_PATH_START") + directoryName);
     }
 
     public void sendRemote(Mess mess) {

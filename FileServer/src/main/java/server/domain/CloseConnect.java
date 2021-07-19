@@ -4,10 +4,10 @@ import server.main.ClientHandler;
 import message.Mess;
 import message.MessUtil;
 
-public class Close implements ServerAction {
+public class CloseConnect implements ServerAction {
     private ClientHandler client;
 
-    public Close(ClientHandler client) {
+    public CloseConnect(ClientHandler client) {
         this.client = client;
     }
 

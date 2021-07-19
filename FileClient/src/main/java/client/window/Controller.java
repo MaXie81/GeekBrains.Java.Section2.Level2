@@ -64,19 +64,19 @@ public class Controller {
         flgServer = false;
         String name = (String) lstClientDir.getSelectionModel().getSelectedItem();
         int clickCnt = mouseEvent.getClickCount();
-        setDir(name, clickCnt);
+        setDirectory(name, clickCnt);
     }
     @FXML
     private void onMouseClickServerDir(MouseEvent mouseEvent) {
         flgServer = true;
         String name = (String) lstServerDir.getSelectionModel().getSelectedItem();
         int clickCnt = mouseEvent.getClickCount();
-        setDir(name, clickCnt);
+        setDirectory(name, clickCnt);
     }
     @FXML
     private void onMouseClickCreateDir(MouseEvent mouseEvent) {
         String name = (String) JOptionPane.showInputDialog(null, "Имя папки: ", "Создать папку", JOptionPane.PLAIN_MESSAGE);
-        createDir(name);
+        createDirectory(name);
     }
     @FXML
     private void onMouseClickDelete(MouseEvent mouseEvent) {
@@ -84,7 +84,7 @@ public class Controller {
     }
     @FXML
     private void onMouseClickCopyFil(MouseEvent mouseEvent) {
-        copyFil();
+        copyFile();
     }
 
     private void authOn() {
@@ -118,8 +118,8 @@ public class Controller {
 
         refreshForm();
     }
-    private void setDir(String name, int cntClick) {
-        mess = new Mess(MessageTypes.DIR_SET);
+    private void setDirectory(String name, int cntClick) {
+        mess = new Mess(MessageTypes.SET_DIRECTORY);
         mess.setSelectName(name);
         mess.setFlgServer(flgServer);
         mess.setCntClick(cntClick);
@@ -127,8 +127,8 @@ public class Controller {
 
         refreshForm();
     }
-    private void createDir(String name) {
-        mess = new Mess(MessageTypes.FILE_ADD);
+    private void createDirectory(String name) {
+        mess = new Mess(MessageTypes.ADD_DIRECTORY);
         mess.setSelectName(name);
         mess.setFlgServer(flgServer);
         messResp = client.work(mess);
@@ -136,14 +136,14 @@ public class Controller {
         refreshForm();
     }
     private void delete() {
-        mess = new Mess(MessageTypes.DIR_DEL);
+        mess = new Mess(MessageTypes.DELETE);
         mess.setFlgServer(flgServer);
         messResp = client.work(mess);
 
         refreshForm();
     }
-    private void copyFil() {
-        mess = new Mess(MessageTypes.DIR_COPY);
+    private void copyFile() {
+        mess = new Mess(MessageTypes.COPY_FILE);
         mess.setFlgServer(flgServer);
         messResp = client.work(mess);
 
@@ -158,7 +158,7 @@ public class Controller {
         refreshForm();
     }
     private void disconn() {
-        mess = new Mess(MessageTypes.CONN_CLOSE);
+        mess = new Mess(MessageTypes.CLOSE_CONNECTION);
         messResp = client.work(mess);
     }
 
@@ -195,7 +195,7 @@ public class Controller {
         lstServerDir.setItems(FXCollections.observableArrayList(messResp.getListFile().toArray(new String[0])));
     }
     private Mess getDirInfo(boolean flgServer) {
-        mess = new Mess(MessageTypes.DIR_INFO);
+        mess = new Mess(MessageTypes.GET_DIRECTORY);
         mess.setFlgServer(flgServer);
         return client.work(mess);
     }

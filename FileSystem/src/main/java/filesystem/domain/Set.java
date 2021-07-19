@@ -16,9 +16,9 @@ public class Set implements DirectoryAction {
     public Mess action(Mess mess) {
         ResultCodes code = directory.setPosition(mess.getSelectName(), mess.getCntClick() == 2);
 
-        Mess messResp = directory.getMapDirectoryAction().get(MessageTypes.DIR_INFO).action(mess);
+        Mess messResp = directory.getMapDirectoryAction().get(MessageTypes.GET_DIRECTORY).action(mess);
 
-        messResp = new Mess(MessageTypes.DIR_SET_RESP);
+        messResp = new Mess(MessageTypes.SET_DIRECTORY_RESP);
         messResp.setCode(code);
 
         return messResp;

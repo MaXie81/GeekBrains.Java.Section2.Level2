@@ -21,7 +21,6 @@ public class Communication {
     private Directory directory;
     private boolean isConnection = false;
 
-
     private Mess mess;
 
     public Communication() {
@@ -29,7 +28,7 @@ public class Communication {
         HOST = properties.getProperty("HOST");
         PORT = Integer.parseInt(properties.getProperty("PORT"));
 
-        directory = filesystem.services.Factory.getDirectory(properties.getProperty("DIR_PATH_START"), false);
+        directory = filesystem.services.Factory.getDirectory(properties.getProperty("DIR_PATH_START"));
     }
 
     public Mess send(Mess mess) {

@@ -25,7 +25,7 @@ public class Delete implements DirectoryAction {
 
         ResultCodes code = directory.setPosition(".", false);
 
-        Mess messResp = new Mess(MessageTypes.DIR_DEL_RESP);
+        Mess messResp = new Mess(MessageTypes.DELETE_RESP);
         messResp.setCode(code);
 
         return messResp;

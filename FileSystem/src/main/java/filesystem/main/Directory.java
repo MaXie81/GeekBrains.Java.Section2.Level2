@@ -24,7 +24,7 @@ public class Directory {
     private SelectTypes selectType;
     private LinkedList<String> directoryList;
 
-    public Directory(String dirPath, boolean flgStartPath)  {
+    public Directory(String dirPath)  {
         mapDirectoryAction = Factory.getMapDirectoryAction(this);
 
         File dirTest = new File(dirPath);
@@ -35,9 +35,11 @@ public class Directory {
                 e.printStackTrace();
             }
 
-        START_PATH = flgStartPath ? dirPath : "";
+        START_PATH = dirPath;
+
         reset(dirTest, "*");
     }
+
     public File getDirectory() { return directory; }
     public Boolean isRootDirectory() { return isRootDirectory; }
     public String getSelect() { return select; }
@@ -45,7 +47,9 @@ public class Directory {
     public void setSelectType(SelectTypes selectType) { this.selectType = selectType; }
     public LinkedList<String> getDirectoryList() { return directoryList; }
     public HashMap<MessageTypes, DirectoryAction> getMapDirectoryAction() { return mapDirectoryAction; }
+
     public Mess work(Mess mess) { return mapDirectoryAction.get(mess.getType()).action(mess); }
+
     public SelectTypes getType(String name) {
         if (name == null) return SelectTypes.INVALID_NAME;
         if (name.equals("")) return SelectTypes.INVALID_NAME;

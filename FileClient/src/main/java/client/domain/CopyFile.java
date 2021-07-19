@@ -79,7 +79,6 @@ public class CopyFile implements ClientAction {
         resetFile(false);
         return messResp;
     }
-
     private void readFilePortion() {
         try {
             int size = bisf.available() < BUF_SIZE ? bisf.available() : BUF_SIZE;
@@ -114,10 +113,9 @@ public class CopyFile implements ClientAction {
             }
         }
     }
-
     private Mess setClientFileForSend(Mess mess) {
         try {
-            messResp = client.work(new Mess(MessageTypes.DIR_INFO));
+            messResp = client.work(new Mess(MessageTypes.GET_DIRECTORY));
 
             if (messResp.getSelectType() == SelectTypes.FIL) {
                 mess.setDirPath(messResp.getDirPath());
@@ -140,7 +138,6 @@ public class CopyFile implements ClientAction {
 
         return messResp;
     }
-
     private Mess setServerFileForReceive(Mess mess) {
         mess.setCommand(CommandTypes.SET);
         messResp = client.getCommunication().sendRemote(mess);
@@ -165,7 +162,6 @@ public class CopyFile implements ClientAction {
             return MessUtil.getRespErr(ResultCodes.ERR);
         }
     }
-
     private Mess sendFilePortion(Mess mess) {
         mess.setCommand(CommandTypes.RECEIVE);
         mess.setValInt(arrByte.length);
@@ -184,7 +180,6 @@ public class CopyFile implements ClientAction {
 
         return messResp;
     }
-
     private Mess completeFileCopy(Mess mess) {
         mess.setCommand(CommandTypes.COMPLITE);
         mess.setValLong(fil.length());

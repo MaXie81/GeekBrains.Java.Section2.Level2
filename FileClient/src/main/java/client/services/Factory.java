@@ -24,12 +24,12 @@ public class Factory {
 
         mapClientAction.put(MessageTypes.AUTH_ON, new AuthOn(client));
         mapClientAction.put(MessageTypes.AUTH_OFF, new AuthOff(client));
-        mapClientAction.put(MessageTypes.CONN_CLOSE, new Disconn(client));
-        mapClientAction.put(MessageTypes.DIR_INFO, new RouteMess(client));
-        mapClientAction.put(MessageTypes.DIR_SET, new RouteMess(client));
-        mapClientAction.put(MessageTypes.FILE_ADD, new RouteMess(client));
-        mapClientAction.put(MessageTypes.DIR_DEL, new RouteMess(client));
-        mapClientAction.put(MessageTypes.DIR_COPY, new CopyFile(client));
+        mapClientAction.put(MessageTypes.CLOSE_CONNECTION, new Disconn(client));
+        mapClientAction.put(MessageTypes.GET_DIRECTORY, new RouteMess(client));
+        mapClientAction.put(MessageTypes.SET_DIRECTORY, new RouteMess(client));
+        mapClientAction.put(MessageTypes.ADD_DIRECTORY, new RouteMess(client));
+        mapClientAction.put(MessageTypes.DELETE, new RouteMess(client));
+        mapClientAction.put(MessageTypes.COPY_FILE, new CopyFile(client));
 
         return mapClientAction;
     }

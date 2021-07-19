@@ -28,7 +28,7 @@ public class CreateDirectory implements DirectoryAction {
 
         ResultCodes code = directory.setPosition(dirName, true);
 
-        Mess messResp = new Mess(MessageTypes.FILE_ADD_RESP);
+        Mess messResp = new Mess(MessageTypes.ADD_DIRECTORY_RESP);
         messResp.setCode(code);
 
         return messResp;

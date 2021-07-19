@@ -4,16 +4,16 @@ import dictionary.MessageTypes;
 import filesystem.main.Directory;
 import message.Mess;
 
-public class Info implements DirectoryAction {
+public class GetInfo implements DirectoryAction {
     Directory directory;
 
-    public Info(Directory directory) {
+    public GetInfo(Directory directory) {
         this.directory = directory;
     }
 
     @Override
     public Mess action(Mess mess) {
-        Mess messResp = new Mess(MessageTypes.DIR_INFO_RESP);
+        Mess messResp = new Mess(MessageTypes.GET_DIRECTORY_RESP);
         messResp.setDirName(directory.getDirectory().getName());
         messResp.setDirPath(directory.getDirectory().getPath());
         messResp.setFlgDirRoot(directory.isRootDirectory());
